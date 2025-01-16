@@ -1,5 +1,6 @@
 const catagories = require("../categories.json");
 const fs = require('fs');
+const path = require('path');
 
 module.exports = function QuerySendFiles(ctx, next, port, public) {
     if (ctx, next, port, public) {

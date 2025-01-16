@@ -3,12 +3,6 @@ const path = require('path');
 const koaBody = require('koa-body').default;
 const koaStatic = require('koa-static');
 const http = require('http');
-const users = require("./users.json");
-const songs = require("./data/songs.json");
-const catagories = require("./categories.json");
-const weather = require("./data/weather.json");
-const words = require("./data/words.json")
-const quotes = require("./data/harry.json");
 const WebSocket = require('ws');
 
 const QuerySendFiles = require('./Requests/QuerySendFiles');
