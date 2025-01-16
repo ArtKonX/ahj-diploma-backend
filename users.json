@@ -1,17 +1,1 @@
-[
-    {
-        "id": "be91925f-6514-41c2-b363-fddceec1f99a",
-        "email": "Vasia@ya.ru",
-        "name": "Вася",
-        "password": "123"
-    },
-    {
-        "id": "3319b6eb-3b20-475c-9fb9-a8dfba1365bc"
-    },
-    {
-        "id": "bba997f1-1718-4ff8-b3c8-f292b1d36e67",
-        "email": "тест",
-        "name": "тест",
-        "password": "123"
-    }
-]
+[]

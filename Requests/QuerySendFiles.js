@@ -12,9 +12,11 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
             ctx.set('Content-Type', file.type);
             ctx.set('Content-Length', file.size);
 
+            const tempFilePath = path.join('/tmp', file.originalFilename);
+
             catagories.forEach(catagory => {
                 const typeFiles = file.mimetype.split('/')[0]
-                fs.copyFileSync(file.filepath, '/tmp/public/' + file.originalFilename);
+                fs.copyFileSync(file.filepath, tempFilePath);
 
                 if (!catagory[typeFiles]) {
                     catagory[typeFiles] = [];
