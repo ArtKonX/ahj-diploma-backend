@@ -12,6 +12,14 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
         ctx.set('Content-Type', file.type);
         ctx.set('Content-Length', file.size);
 
+        // Проверка существования файла
+        if (!fs.existsSync(file.filepath)) {
+            console.error(`File not found: ${file.filepath}`);
+            ctx.response.status = 404;
+            ctx.response.body = JSON.stringify({ message: `File not found: ${file.filepath}`, status: 'error' });
+            return;
+        }
+
         const fileStream = fs.createReadStream(file.filepath);
 
         const uploadPath = `https://ahj-diploma-backend-b94r.onrender.com/${file.originalFilename}`;
