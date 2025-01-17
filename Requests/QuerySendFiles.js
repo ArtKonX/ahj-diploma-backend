@@ -1,5 +1,6 @@
-const fs = require('fs'); // Добавлено для работы с файловой системой
+const fs = require('fs');
 const catagories = require("../categories.json");
+const request = require("request");
 
 module.exports = function QuerySendFiles(ctx, next, port, public) {
     try {
@@ -13,7 +14,7 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
 
         const fileStream = fs.createReadStream(file.filepath);
 
-        const uploadPath = `https://ahj-diploma-backend-b94r.onrender.com/${file.originalFilename}`; 
+        const uploadPath = `https://ahj-diploma-backend-b94r.onrender.com/${file.originalFilename}`;
         fileStream.pipe(request.put(uploadPath))
             .on('response', function(response) {
                 if (response.statusCode === 200) {

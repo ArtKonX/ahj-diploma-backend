@@ -25,6 +25,7 @@
     "pino": "8.17.2",
     "pino-pretty": "10.3.1",
     "random-words": "^2.0.1",
+    "request": "^2.88.2",
     "ws": "8.13.0"
   },
   "repository": "https://github.com/ArtKonX/ahj-diploma-backend.git"
