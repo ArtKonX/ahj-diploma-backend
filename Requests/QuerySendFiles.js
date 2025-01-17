@@ -1,66 +1,51 @@
-const fs = require('fs');
 const catagories = require("../categories.json");
-const request = require("request");
+const fs = require('fs');
 
 module.exports = function QuerySendFiles(ctx, next, port, public) {
-    try {
-        const { userId, city, id } = ctx.request.body;
-        const { file } = ctx.request.files;
+    if (ctx, next, port, public) {
+        try {
+            const { userId, city, id } = ctx.request.body;
+            const { file } = ctx.request.files;
 
-        ctx.set('Access-Control-Allow-Origin', '*');
-        ctx.set('Content-disposition', `attachment; filename=${file.name}`);
-        ctx.set('Content-Type', file.type);
-        ctx.set('Content-Length', file.size);
+            ctx.set('Access-Control-Allow-Origin', '*');
+            ctx.set('Content-disposition', `attachment; filename=${file.name}`);
+            ctx.set('Content-Type', file.type);
+            ctx.set('Content-Length', file.size);
 
-        // Проверка существования файла
-        if (!fs.existsSync(file.filepath)) {
-            console.error(`File not found: ${file.filepath}`);
-            ctx.response.status = 404;
-            ctx.response.body = JSON.stringify({ message: `File not found: ${file.filepath}`, status: 'error' });
-            return;
-        }
+            catagories.forEach(catagory => {
+                const typeFiles = file.mimetype.split('/')[0]
+                fs.copyFileSync(file.filepath, public + '/' + file.originalFilename);
 
-        const fileStream = fs.createReadStream(file.filepath);
-
-        const uploadPath = `https://ahj-diploma-backend-b94r.onrender.com/${file.originalFilename}`;
-        fileStream.pipe(request.put(uploadPath))
-            .on('response', function(response) {
-                if (response.statusCode === 200) {
-                    console.log(`File uploaded successfully to ${uploadPath}`);
-                } else {
-                    console.error(`Failed to upload file: ${response.statusCode}`);
+                if (!catagory[typeFiles]) {
+                    catagory[typeFiles] = [];
                 }
-            });
 
-        catagories.forEach(catagory => {
-            const typeFiles = file.mimetype.split('/')[0];
+                const doublon = catagory[typeFiles].find(fileEl => (fileEl.size == file.size) && (fileEl.userId == userId));
 
-            if (catagory[typeFiles] && catagory[typeFiles].find(fileEl => (fileEl.size == file.size) && (fileEl.userId == userId))) {
-                console.error(`This file id - ${id} with user id: ${userId} already in your collection (`);
-                ctx.response.status = 500;
-                ctx.response.body = JSON.stringify({ message: `This file id - ${id} with user id: ${userId} already in your collection (`, status: 'error' });
-                return;
-            }
+                if (doublon) {
+                    console.error(`This file id - ${id} with user id: ${userId} already in your collection (`);
+                    ctx.response.status = 500;
+                    ctx.response.body = JSON.stringify({ message: `This file id - ${id} with user id: ${userId} already in your collection (`, status: 'error' });
+                } else {
 
-            const fileInfo = { id, userId, type: file.mimetype, name: file.originalFilename, src: uploadPath, pin: false, city, size: file.size };
+                    const fileInfo = { id, userId, type: file.mimetype, name: file.originalFilename, src: 'http://localhost:' + port + '/' + file.originalFilename, pin: false, city, size: file.size };
 
-            if (!catagory[typeFiles]) {
-                catagory[typeFiles] = [];
-            }
-            catagory[typeFiles].unshift(fileInfo);
+                    catagory[typeFiles].unshift(fileInfo);
 
-            if (!catagory['allMessages']) {
-                catagory['allMessages'] = [];
-            }
-            catagory['allMessages'].unshift(fileInfo);
+                    if (!catagory['allMessages']) {
+                        catagory['allMessages'] = [];
+                    }
+                    catagory['allMessages'].unshift(fileInfo);
 
-            ctx.response.status = 200;
-            console.error(`Success added file with id: ${id} in ${typeFiles};)`);
-            ctx.response.body = JSON.stringify({ file: fileInfo, message: `Success added file with id: ${id} in ${typeFiles};)`, status: 'ok' });
-        });
-    } catch (error) {
-        console.error(`Error sending file: ${error.message}`);
-        ctx.response.status = 500;
-        ctx.response.body = JSON.stringify({ message: `Error sending file: ${error.message}`, status: 'error' });
+                    ctx.response.status = 200;
+                    console.error(`Success added file with id: ${id} in ${typeFiles};)`);
+                    ctx.response.body = JSON.stringify({ file: fileInfo, message: `Success added file with id: ${id} in ${typeFiles};)`, status: 'ok' });
+                }
+            })
+        } catch (error) {
+            console.error(`Error send file( ${error.message}`);
+            ctx.response.status = 500;
+            ctx.response.body = JSON.stringify({ message: `Error send file( ${error.message}`, status: 'error' });
+        }
     }
 }
