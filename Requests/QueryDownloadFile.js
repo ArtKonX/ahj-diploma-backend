@@ -14,7 +14,7 @@ module.exports = function QueryDownloadFile(ctx, next, port, public) {
                 el['allMessages'] = [];
               }
 
-              const file = el['allMessages'].filter(message => message.userId == userId).find(f => f.name == id);
+              const file = el['allMessages'].filter(message => message.userId == userId).find(f => f.id == id);
 
               if (!file) {
 
