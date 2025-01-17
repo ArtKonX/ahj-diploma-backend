@@ -28,7 +28,7 @@ module.exports = function QueryDownloadFile(ctx, next, port, public) {
                 ctx.set('Content-Type', file.type);
                 ctx.set('Content-Length', file.size);
 
-                let filePath = path.join(public, file.name);
+                let filePath = path.join(public, '/' + file.name);
 
                 const stream = fs.createReadStream(filePath);
 
