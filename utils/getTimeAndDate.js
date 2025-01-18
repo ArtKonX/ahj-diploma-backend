@@ -1,7 +1,7 @@
 module.exports = function getTimeAndDate() {
     const date = new Date();
 
-    const formattedDate = date.toLocaleString([], {
+    const formattedDate = date.toLocaleString('ru-RU', {
         timeZone: 'UTC',
         year: 'numeric',
         month: '2-digit',
