@@ -29,7 +29,7 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
                     ctx.response.body = JSON.stringify({ message: `This file id - ${id} with user id: ${userId} already in your collection (`, status: 'error' });
                 } else {
 
-                    const fileInfo = { date: getTimeAndDate(), id, userId, type: file.mimetype, name: file.originalFilename, src: 'https://ahj-diploma-backend-kgk7.onrender.com' + '/tmp/' + file.originalFilename, pin: false, city, size: file.size };
+                    const fileInfo = { date: getTimeAndDate(), id, userId, type: file.mimetype, name: file.originalFilename, src: '/tmp/' + file.filepath, pin: false, city, size: file.size };
 
                     catagory[typeFiles].unshift(fileInfo);
 
