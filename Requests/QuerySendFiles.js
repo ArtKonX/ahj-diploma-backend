@@ -1,5 +1,6 @@
 const catagories = require("../categories.json");
 const fs = require('fs');
+const getTimeAndDate = require("../utils/getTimeAndDate");
 
 module.exports = function QuerySendFiles(ctx, next, port, public) {
     if (ctx, next, port, public) {
@@ -28,7 +29,7 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
                     ctx.response.body = JSON.stringify({ message: `This file id - ${id} with user id: ${userId} already in your collection (`, status: 'error' });
                 } else {
 
-                    const fileInfo = { id, userId, type: file.mimetype, name: file.originalFilename, src: 'https://ahj-diploma-backend-b94r.onrender.com/' + file.originalFilename, pin: false, city, size: file.size };
+                    const fileInfo = { date: getTimeAndDate(), id, userId, type: file.mimetype, name: file.originalFilename, src: 'http://localhost:7070/' + file.originalFilename, pin: false, city, size: file.size };
 
                     catagory[typeFiles].unshift(fileInfo);
 

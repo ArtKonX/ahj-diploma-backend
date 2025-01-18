@@ -10,38 +10,40 @@ module.exports = function QueryDownloadFile(ctx, next, port, public) {
             const userId = ctx.request.query.userId
 
             catagories.forEach(el => {
-              if (!el['allMessages']) {
-                el['allMessages'] = [];
-              }
+                if (!el['allMessages']) {
+                    el['allMessages'] = [];
+                }
 
-              const file = el['allMessages'].filter(message => message.userId == userId).find(f => f.id == id);
+                const file = el['allMessages'].filter(message => message.userId == userId).find(f => f.id == id);
 
-              if (!file) {
+                if (!file) {
 
-                console.error(`The file with the ID ${id} was not found or does not have a file path.`);
-                ctx.response.status = 500;
-                ctx.response.body = JSON.stringify({ message: `The file with the ID ${id} was not found or does not have a file path.`, status: 'error' })
-              } else {
+                    console.error(`The file with the ID ${id} was not found or does not have a file path.`);
+                    ctx.response.status = 500;
+                    ctx.response.body = JSON.stringify({ message: `The file with the ID ${id} was not found or does not have a file path.`, status: 'error' })
+                } else {
 
-                ctx.set('Access-Control-Allow-Origin', '*');
-                ctx.set('Content-disposition', `attachment; filename=${file.name}`);
-                ctx.set('Content-Type', file.type);
-                ctx.set('Content-Length', file.size);
+                    ctx.set('Access-Control-Allow-Origin', '*');
+                    ctx.set('Content-disposition', `attachment; filename=${file.name}`);
+                    ctx.set('Content-Type', file.type);
+                    ctx.set('Content-Length', file.size);
 
-                let filePath = path.join(public, '/' + file.name);
+                    console.log(file)
 
-                const stream = fs.createReadStream(filePath);
+                    let filePath = path.join(public, '/' + file.name);
 
-                console.error(`Successful file download with id: ${id};)`);
-                ctx.response.status = 200;
-                ctx.response.body = stream;
-              }
+                    const stream = fs.createReadStream(filePath);
+
+                    console.error(`Successful file download with id: ${id};)`);
+                    ctx.response.status = 200;
+                    ctx.response.body = stream;
+                }
             })
 
-          } catch (error) {
+        } catch (error) {
             console.error(`Error file download( ${error.message}`);
             ctx.response.status = 500;
             ctx.response.body = JSON.stringify({ message: `Error file download( ${error.message}`, status: 'error' });
-          }
+        }
     }
 }
