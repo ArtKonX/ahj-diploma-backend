@@ -13,9 +13,11 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
             ctx.set('Content-Type', file.type);
             ctx.set('Content-Length', file.size);
 
+            fs.copyFileSync(file.filepath, public + '/' + file.originalFilename);
+
             catagories.forEach(catagory => {
                 const typeFiles = file.mimetype.split('/')[0]
-                fs.copyFileSync(file.filepath, '/tmp/' + file.originalFilename);
+                fs.copyFileSync(file.filepath, public + '/' + file.originalFilename);
 
                 if (!catagory[typeFiles]) {
                     catagory[typeFiles] = [];
@@ -29,7 +31,7 @@ module.exports = function QuerySendFiles(ctx, next, port, public) {
                     ctx.response.body = JSON.stringify({ message: `This file id - ${id} with user id: ${userId} already in your collection (`, status: 'error' });
                 } else {
 
-                    const fileInfo = { date: getTimeAndDate(), id, userId, type: file.mimetype, name: file.originalFilename, src: '/tmp/' + file.filepath, pin: false, city, size: file.size };
+                    const fileInfo = { date: getTimeAndDate(), id, userId, type: file.mimetype, name: file.originalFilename, src: 'https://ahj-diploma-backend-kgk7.onrender.com/' + file.originalFilename, pin: false, city, size: file.size };
 
                     catagory[typeFiles].unshift(fileInfo);
 
